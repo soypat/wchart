@@ -1,7 +1,10 @@
 package wchart
 
 import (
+	"image/color"
+	"math"
 	"reflect"
+	"strconv"
 	"syscall/js"
 	"time"
 )
@@ -106,4 +109,12 @@ func objectify(Struct interface{}) js.Value {
 		}
 	}
 	return obj
+}
+
+func colorString(c color.Color) string {
+	r, g, b, a := c.RGBA()
+	return "rgb(" + strconv.Itoa(int(r>>8)) + "," +
+		strconv.Itoa(int(g>>8)) + "," +
+		strconv.Itoa(int(b>>8)) + "," +
+		strconv.FormatFloat(float64(a)/math.MaxInt16, 'g', 4, 64) + ")"
 }

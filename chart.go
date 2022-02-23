@@ -1,6 +1,9 @@
 package wchart
 
-import "syscall/js"
+import (
+	"image/color"
+	"syscall/js"
+)
 
 type Chart struct {
 	js.Value
@@ -61,4 +64,18 @@ type DatasetHandle struct {
 
 func (dh DatasetHandle) AppendFloat(f float64) {
 	dh.Get("data").Call("push", f)
+}
+
+func (dh DatasetHandle) SetBackgroundColor(c color.Color) {
+	dh.Set("backgroundColor", colorString(c))
+}
+
+// SetColor sets font color
+func (dh DatasetHandle) SetColor(c color.Color) {
+	dh.Set("color", colorString(c))
+}
+
+// SetColor sets font color
+func (dh DatasetHandle) SetBorderColor(c color.Color) {
+	dh.Set("borderColor", colorString(c))
 }

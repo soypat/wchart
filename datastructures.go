@@ -1,6 +1,8 @@
 package wchart
 
-import "syscall/js"
+import (
+	"syscall/js"
+)
 
 type XYer interface {
 	XY(int) (x, y float64)
@@ -23,7 +25,8 @@ type Data struct {
 }
 
 type Dataset struct {
-	Data js.Value `js:"data"`
+	Data            js.Value `js:"data"`
+	BackgroundColor js.Value `js:"backgroundColor"`
 	// The label for the dataset which appears in the legend and tooltips.
 	Label string `js:"label"`
 	// How to clip relative to chartArea. Positive value allows overflow, negative value clips that many pixels inside chartArea. 0 = clip at chartArea.
