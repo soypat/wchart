@@ -98,7 +98,6 @@ func objectify(Struct interface{}) js.Value {
 				obj.Set(tag, ifv.getInternalObject())
 			}
 		case reflect.Slice:
-			println("slice objectify")
 			arr := js.Global().Get("Array").New()
 			for idx := 0; idx < fv.Len(); idx++ {
 				arr.Call("push", objectify(fv.Index(idx).Interface()))

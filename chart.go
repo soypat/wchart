@@ -7,6 +7,12 @@ type Chart struct {
 }
 
 func NewChart(ctx js.Value, config *Config) Chart {
+	if !ctx.Truthy() {
+		panic("ctx argument to NewChart should be a DOM element node.")
+	}
+	if chart.IsUndefined() {
+		panic("Chart not defined. Did you add the script to DOM?")
+	}
 	return Chart{
 		Value: chart.Get("Chart").New(ctx, objectify(config)),
 	}
