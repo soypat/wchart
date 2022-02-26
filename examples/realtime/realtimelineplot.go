@@ -6,11 +6,12 @@ import (
 	"syscall/js"
 	"time"
 
+	"github.com/soypat/gwasm"
 	"github.com/soypat/wchart"
 )
 
 func main() {
-	wchart.AddScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.js", "Chart")
+	gwasm.AddScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.js", "Chart", time.Second)
 	wchart.Init()
 	canvas := js.Global().Get("document").Call("createElement", "canvas")
 	js.Global().Get("document").Get("body").Call("appendChild", canvas)

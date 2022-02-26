@@ -3,6 +3,8 @@ package wchart
 import (
 	"image/color"
 	"syscall/js"
+
+	"github.com/soypat/gwasm"
 )
 
 type Chart struct {
@@ -72,15 +74,15 @@ func (dh DatasetHandle) AppendFloat(f float64) {
 }
 
 func (dh DatasetHandle) SetBackgroundColor(c color.Color) {
-	dh.Set("backgroundColor", colorString(c))
+	dh.Set("backgroundColor", gwasm.JSColor(c))
 }
 
 // SetColor sets font color
 func (dh DatasetHandle) SetColor(c color.Color) {
-	dh.Set("color", colorString(c))
+	dh.Set("color", gwasm.JSColor(c))
 }
 
 // SetColor sets font color
 func (dh DatasetHandle) SetBorderColor(c color.Color) {
-	dh.Set("borderColor", colorString(c))
+	dh.Set("borderColor", gwasm.JSColor(c))
 }
