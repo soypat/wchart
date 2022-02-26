@@ -6,7 +6,7 @@ type RealtimeLinePlot struct {
 	Chart
 }
 
-func NewRealtimeLinePlot(ctx js.Value, datasets []Dataset, xLabels []string) RealtimeLinePlot {
+func NewRealtimeLinePlot(ctx js.Value, xLabels []string, datasets []Dataset) RealtimeLinePlot {
 	switch {
 	case len(datasets) == 0:
 		panic("cannot create plot from 0 length datasets")
@@ -29,5 +29,13 @@ func NewRealtimeLinePlot(ctx js.Value, datasets []Dataset, xLabels []string) Rea
 
 // Call Update after calling AddData to update graph. data must be of length
 func (r RealtimeLinePlot) AddData(xLabel string, data []float64) {
-	r.GetConfig().AppendFloat(xLabel, data)
+	r.GetConfig().AppendFloats(xLabel, data)
+}
+
+func (r RealtimeLinePlot) DiscardDatasetData() {
+	r.GetConfig().Get("data").Set("labels", js.Global().Get("Array").New())
+	dsets := r.GetConfig().Datasets()
+	for _, dset := range dsets {
+		dset.Set("data", js.Global().Get("Array").New())
+	}
 }

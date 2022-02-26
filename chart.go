@@ -35,7 +35,7 @@ type ConfigHandle struct {
 	js.Value
 }
 
-func (ch ConfigHandle) AppendFloat(label string, data []float64) {
+func (ch ConfigHandle) AppendFloats(label string, data []float64) {
 	datasets := ch.Datasets()
 	if len(data) != len(datasets) {
 		panic("length of incoming data must match length of existing datasets")
@@ -63,7 +63,12 @@ type DatasetHandle struct {
 }
 
 func (dh DatasetHandle) AppendFloat(f float64) {
-	dh.Get("data").Call("push", f)
+	data := dh.Get("data")
+	if !data.Truthy() {
+		dh.Set("data", js.Global().Get("Array").New())
+		data = dh.Get("data")
+	}
+	data.Call("push", f)
 }
 
 func (dh DatasetHandle) SetBackgroundColor(c color.Color) {

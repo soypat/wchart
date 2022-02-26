@@ -27,6 +27,8 @@ type Data struct {
 type Dataset struct {
 	Data            js.Value `js:"data"`
 	BackgroundColor js.Value `js:"backgroundColor"`
+	BorderColor     js.Value `js:"borderColor"`
+	Color           js.Value `js:"color"`
 	// The label for the dataset which appears in the legend and tooltips.
 	Label string `js:"label"`
 	// How to clip relative to chartArea. Positive value allows overflow, negative value clips that many pixels inside chartArea. 0 = clip at chartArea.
