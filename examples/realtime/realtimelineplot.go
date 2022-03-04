@@ -29,7 +29,7 @@ func main() {
 			rtlp.Update()
 			time.Sleep(time.Second * 1000 / 1618) // the "golden" frequency?
 			if x > 2*math.Pi {
-				rtlp.DiscardDatasetData()
+				rtlp.ClearChartData()
 				x = 0
 			}
 		}

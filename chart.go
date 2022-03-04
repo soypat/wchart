@@ -60,6 +60,15 @@ func (ch ConfigHandle) Datasets() []DatasetHandle {
 	return datasets
 }
 
+// ClearChartData destroys dataset `data` fields and config data.labels and sets them to empty array
+func (ch ConfigHandle) ClearChartData() {
+	ch.Get("data").Set("labels", js.Global().Get("Array").New())
+	dsets := ch.Datasets()
+	for _, dset := range dsets {
+		dset.Set("data", js.Global().Get("Array").New())
+	}
+}
+
 // SetAnimation enables or disables animations for the chart.
 // Usually used for performance reasons or when animations are distracting.
 func (ch ConfigHandle) SetAnimation(enableAnimation bool) {
@@ -79,7 +88,7 @@ func (ch ConfigHandle) SetShowLine(enableShowLine bool) {
 
 // SetPointRadius sets the point radius of the chart. Set to zero for performance gains.
 func (ch ConfigHandle) SetPointRadius(pointRadius float64) {
-	ch.Get("options").Get("point").Set("radius", pointRadius)
+	ch.Get("options").Get("elements").Get("point").Set("radius", pointRadius)
 }
 
 type DatasetHandle struct {

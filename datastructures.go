@@ -38,9 +38,10 @@ type Dataset struct {
 	// The drawing order of dataset. Also affects order for stacking, tooltip and legend.
 	Order int `js:"order"`
 	// The ID of the group to which this dataset belongs to (when stacked, each group will be a separate stack). Defaults to dataset `type`.
-	Stack   string `js:"stack"`
-	Parsing bool   `js:"parsing"`
-	Hidden  bool   `js:"hidden"`
+	Stack    string `js:"stack"`
+	Parsing  bool   `js:"parsing"`
+	Hidden   bool   `js:"hidden"`
+	SpanGaps bool   `js:"spanGaps"`
 }
 
 type Clip struct {

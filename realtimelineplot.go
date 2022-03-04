@@ -32,10 +32,7 @@ func (r RealtimeLinePlot) AddData(xLabel string, data []float64) {
 	r.GetConfig().AppendFloats(xLabel, data)
 }
 
-func (r RealtimeLinePlot) DiscardDatasetData() {
-	r.GetConfig().Get("data").Set("labels", js.Global().Get("Array").New())
-	dsets := r.GetConfig().Datasets()
-	for _, dset := range dsets {
-		dset.Set("data", js.Global().Get("Array").New())
-	}
+// ClearChartData removes all data from chart.
+func (r RealtimeLinePlot) ClearChartData() {
+	r.GetConfig().ClearChartData()
 }
