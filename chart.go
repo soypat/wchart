@@ -33,6 +33,21 @@ func (c Chart) GetConfig() ConfigHandle {
 	}
 }
 
+// IsHiddenMeta is null until user clicks on legend, then it is
+// set to true if user has hidden dataset, or false if dataset is visible.
+func (c Chart) IsHiddenMeta(datasetIdx int) js.Value {
+	return c.Call("getDatasetMeta", datasetIdx).Get("hidden")
+}
+
+// IsHidden returns true if dataset hidden property is set to true.
+func (c Chart) IsHidden(datasetIdx int) bool {
+	hidden := c.GetConfig().Datasets()[datasetIdx].Get("hidden")
+	if hidden.IsNull() || hidden.IsUndefined() {
+		return false
+	}
+	return hidden.Bool()
+}
+
 type ConfigHandle struct {
 	js.Value
 }
@@ -72,23 +87,38 @@ func (ch ConfigHandle) ClearChartData() {
 // SetAnimation enables or disables animations for the chart.
 // Usually used for performance reasons or when animations are distracting.
 func (ch ConfigHandle) SetAnimation(enableAnimation bool) {
-	ch.Get("options").Set("animation", enableAnimation)
+	setOption(ch.Value, "animation", enableAnimation)
 }
 
 // SetSpanGaps If you have a lot of data points, it can be more performant to enable spanGaps.
 // This disables segmentation of the line, which can be an unneeded step.
 func (ch ConfigHandle) SetSpanGaps(enableSpanGaps bool) {
-	ch.Get("options").Set("spanGaps", enableSpanGaps)
+	setOption(ch.Value, "spanGaps", enableSpanGaps)
 }
 
 // SetShowLine enables/disables line drawing for the chart.
 func (ch ConfigHandle) SetShowLine(enableShowLine bool) {
-	ch.Get("options").Set("showLine", enableShowLine)
+	setOption(ch.Value, "showLine", enableShowLine)
 }
 
 // SetPointRadius sets the point radius of the chart. Set to zero for performance gains.
 func (ch ConfigHandle) SetPointRadius(pointRadius float64) {
-	ch.Get("options").Get("elements").Get("point").Set("radius", pointRadius)
+	opts := ch.Get("options")
+	if opts.IsUndefined() {
+		opts = js.Global().Get("Object").New()
+		ch.Set("options", opts)
+	}
+	elems := opts.Get("elements")
+	if elems.IsUndefined() {
+		elems = js.Global().Get("Object").New()
+		setOption(ch.Value, "elements", elems)
+	}
+	point := elems.Get("point")
+	if point.IsUndefined() {
+		point = js.Global().Get("Object").New()
+		elems.Set("point", point)
+	}
+	point.Set("radius", pointRadius)
 }
 
 type DatasetHandle struct {
@@ -113,7 +143,7 @@ func (dh DatasetHandle) SetColor(c color.Color) {
 	dh.Set("color", gwasm.JSColor(c))
 }
 
-// SetColor sets font color
+// SetBorderColor sets outline color of the chart data.
 func (dh DatasetHandle) SetBorderColor(c color.Color) {
 	dh.Set("borderColor", gwasm.JSColor(c))
 }
@@ -121,21 +151,35 @@ func (dh DatasetHandle) SetBorderColor(c color.Color) {
 // SetAnimation enables or disables animations for the dataset.
 // Usually used for performance reasons or when animations are distracting.
 func (dh DatasetHandle) SetAnimation(enableAnimation bool) {
-	dh.Get("options").Set("animation", enableAnimation)
+	setOption(dh.Value, "animation", enableAnimation)
 }
 
 // SetSpanGaps if the dataset has a lot of data points, it can be more performant to enable spanGaps.
 // This disables segmentation of the line, which can be an unneeded step.
 func (dh DatasetHandle) SetSpanGaps(enableSpanGaps bool) {
-	dh.Get("options").Set("spanGaps", enableSpanGaps)
+	setOption(dh.Value, "spanGaps", enableSpanGaps)
 }
 
 // SetShowLine disables/enables dataset line drawing.
-func (dh DatasetHandle) SetShowLine(enableShowLine bool) {
-	dh.Get("options").Set("showLine", enableShowLine)
-}
+// func (dh DatasetHandle) SetShowLine(enableShowLine bool) {
+// 	setOption(dh.Value, "showLine", enableShowLine) // Not working.
+// }
 
 // SetPointRadius sets the point radius of dataset. Set to zero for performance gains.
 func (dh DatasetHandle) SetPointRadius(pointRadius float64) {
 	dh.Set("pointRadius", pointRadius)
+}
+
+// SetHidden hides/shows dataset data in chart.
+func (dh DatasetHandle) SetHidden(hidden bool) {
+	dh.Set("hidden", hidden)
+}
+
+func setOption(jsv js.Value, prop string, x interface{}) {
+	opts := jsv.Get("options")
+	if opts.IsUndefined() {
+		opts = js.Global().Get("Object").New()
+		jsv.Set("options", opts)
+	}
+	opts.Set(prop, x)
 }
