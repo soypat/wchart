@@ -60,6 +60,12 @@ func (ch ConfigHandle) Datasets() []DatasetHandle {
 	return datasets
 }
 
+// SetAnimation enables or disables animations for the chart.
+// Usually used for performance reasons or when animations are distracting.
+func (ch ConfigHandle) SetAnimation(enableAnimation bool) {
+	ch.Get("options").Set("animation", enableAnimation)
+}
+
 type DatasetHandle struct {
 	js.Value
 }
