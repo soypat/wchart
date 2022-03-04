@@ -66,6 +66,22 @@ func (ch ConfigHandle) SetAnimation(enableAnimation bool) {
 	ch.Get("options").Set("animation", enableAnimation)
 }
 
+// SetSpanGaps If you have a lot of data points, it can be more performant to enable spanGaps.
+// This disables segmentation of the line, which can be an unneeded step.
+func (ch ConfigHandle) SetSpanGaps(enableSpanGaps bool) {
+	ch.Get("options").Set("spanGaps", enableSpanGaps)
+}
+
+// SetShowLine enables/disables line drawing for the chart.
+func (ch ConfigHandle) SetShowLine(enableShowLine bool) {
+	ch.Get("options").Set("showLine", enableShowLine)
+}
+
+// SetPointRadius sets the point radius of the chart. Set to zero for performance gains.
+func (ch ConfigHandle) SetPointRadius(pointRadius float64) {
+	ch.Get("options").Get("point").Set("radius", pointRadius)
+}
+
 type DatasetHandle struct {
 	js.Value
 }
@@ -91,4 +107,26 @@ func (dh DatasetHandle) SetColor(c color.Color) {
 // SetColor sets font color
 func (dh DatasetHandle) SetBorderColor(c color.Color) {
 	dh.Set("borderColor", gwasm.JSColor(c))
+}
+
+// SetAnimation enables or disables animations for the dataset.
+// Usually used for performance reasons or when animations are distracting.
+func (dh DatasetHandle) SetAnimation(enableAnimation bool) {
+	dh.Get("options").Set("animation", enableAnimation)
+}
+
+// SetSpanGaps if the dataset has a lot of data points, it can be more performant to enable spanGaps.
+// This disables segmentation of the line, which can be an unneeded step.
+func (dh DatasetHandle) SetSpanGaps(enableSpanGaps bool) {
+	dh.Get("options").Set("spanGaps", enableSpanGaps)
+}
+
+// SetShowLine disables/enables dataset line drawing.
+func (dh DatasetHandle) SetShowLine(enableShowLine bool) {
+	dh.Get("options").Set("showLine", enableShowLine)
+}
+
+// SetPointRadius sets the point radius of dataset. Set to zero for performance gains.
+func (dh DatasetHandle) SetPointRadius(pointRadius float64) {
+	dh.Set("pointRadius", pointRadius)
 }
