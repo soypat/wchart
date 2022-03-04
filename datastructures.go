@@ -15,9 +15,10 @@ type LabelledXYer interface {
 }
 
 type Config struct {
-	Type   string   `js:"type"`
-	Data   Data     `js:"data"`
-	Labels []string `js:"labels"`
+	Type    string   `js:"type"`
+	Data    Data     `js:"data"`
+	Labels  []string `js:"labels"`
+	Options *Options `js:"options"`
 }
 
 type Data struct {
@@ -62,4 +63,9 @@ func LabelXYer(label string, xyer XYer) LabelledXYer {
 		XYer:     xyer,
 		labeller: labeller(label),
 	}
+}
+
+type Options struct {
+	Animation bool     `js:"animation"`
+	Scales    js.Value `js:"scales"`
 }
