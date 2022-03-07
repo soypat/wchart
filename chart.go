@@ -27,6 +27,35 @@ func (c Chart) Update() {
 	c.Call("update")
 }
 
+// Decimate removes every mod'th point of all datasets. This
+// can be used to improve rendering performance on graphs with many points.
+// Lower mod values yield more aggressive decimation, with mod=2 being most aggressive.
+// mod must be greater than 1.
+func (c Chart) Decimate(mod int) {
+	if mod < 2 {
+		panic("mod argument to Chart.Decimate must be greater than 1")
+	}
+	labels := c.GetConfig().Get("data").Get("labels")
+	n := labels.Length()
+	dlen := n / mod
+	xdata := make([]string, dlen)
+	for i := 0; i < dlen; i++ {
+		xdata[i] = labels.Index(i * mod).String()
+	}
+	c.SetLabels(xdata)
+	for _, dset := range c.GetConfig().Datasets() {
+		dset.decimate(mod)
+	}
+}
+
+func (c Chart) SetLabels(newLabels []string) {
+	data := js.Global().Get("Array").New()
+	for i := range newLabels {
+		data.Call("push", newLabels[i])
+	}
+	c.GetConfig().Get("data").Set("labels", data)
+}
+
 func (c Chart) GetConfig() ConfigHandle {
 	return ConfigHandle{
 		Value: c.Get("config"),
@@ -182,4 +211,26 @@ func setOption(jsv js.Value, prop string, x interface{}) {
 		jsv.Set("options", opts)
 	}
 	opts.Set(prop, x)
+}
+
+func (dh DatasetHandle) SetData(ydata []float64) {
+	data := js.Global().Get("Array").New()
+	for i := range ydata {
+		data.Call("push", ydata[i])
+	}
+	dh.Set("data", data)
+}
+
+func (dh DatasetHandle) decimate(mod int) {
+	if mod < 2 {
+		panic("mod argument to DatasetHandle.Decimate must be greater than 1")
+	}
+	data := dh.Get("data")
+	n := data.Length()
+	dlen := n / mod
+	ydata := make([]float64, dlen)
+	for i := 0; i < dlen; i++ {
+		ydata[i] = data.Index(i * mod).Float()
+	}
+	dh.SetData(ydata)
 }

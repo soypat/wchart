@@ -19,6 +19,7 @@ func main() {
 	rtlp := wchart.NewRealtimeLinePlot(canvas, nil, []wchart.Dataset{
 		{Label: "data", BorderColor: js.ValueOf("red")},
 	})
+	js.Global().Set("plot", rtlp.Value)
 	go func() {
 		x := 0.0
 		for {
@@ -29,7 +30,7 @@ func main() {
 			rtlp.Update()
 			time.Sleep(time.Second * 1000 / 1618) // the "golden" frequency?
 			if x > 2*math.Pi {
-				rtlp.ClearChartData()
+				rtlp.Decimate(3)
 				x = 0
 			}
 		}
