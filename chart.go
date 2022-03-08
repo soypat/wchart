@@ -27,10 +27,11 @@ func (c Chart) Update() {
 	c.Call("update")
 }
 
-// Decimate removes every mod'th point of all datasets. This
+// Decimate keeps every mod'th point of all datasets. This
 // can be used to improve rendering performance on graphs with many points.
-// Lower mod values yield more aggressive decimation, with mod=2 being most aggressive.
-// mod must be greater than 1.
+// Higher mod values yield more aggressive decimation, with mod=2 being the least aggressive possible
+// discarding 1 of every two sample points.
+// mod must be greater than 1. Example: mod=10 discards 9 of every 10 points.
 func (c Chart) Decimate(mod int) {
 	if mod < 2 {
 		panic("mod argument to Chart.Decimate must be greater than 1")
