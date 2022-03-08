@@ -17,12 +17,12 @@ type LabelledXYer interface {
 type Config struct {
 	Type    string   `js:"type"`
 	Data    Data     `js:"data"`
-	Labels  []string `js:"labels"`
 	Options *Options `js:"options"`
 }
 
 type Data struct {
 	Datasets []Dataset `js:"datasets"`
+	Labels   []string  `js:"labels"`
 }
 
 type Dataset struct {

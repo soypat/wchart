@@ -18,8 +18,8 @@ func NewRealtimeLinePlot(ctx js.Value, xLabels []string, datasets []Dataset) Rea
 		Type: "line",
 		Data: Data{
 			Datasets: datasets,
+			Labels:   xLabels,
 		},
-		Labels: xLabels,
 	}
 
 	return RealtimeLinePlot{
