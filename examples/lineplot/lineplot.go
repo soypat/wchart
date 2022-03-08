@@ -15,8 +15,9 @@ func main() {
 	canvas := js.Global().Get("document").Call("createElement", "canvas")
 	js.Global().Get("document").Get("body").Call("appendChild", canvas)
 	lp := wchart.NewLineFromXYers(canvas, &Func{
-		F: func(x float64) float64 { return x * x },
-		N: 10,
+		F:    func(x float64) float64 { return x * x },
+		N:    10,
+		Name: "x^2",
 	})
 	cfg := lp.GetConfig()
 	js.Global().Set("chart", lp)
@@ -29,6 +30,7 @@ type Func struct {
 	F            func(x float64) float64
 	Xi, XfMinus1 float64
 	N            int
+	Name         string
 }
 
 func (f *Func) XY(i int) (x, y float64) {
@@ -36,4 +38,5 @@ func (f *Func) XY(i int) (x, y float64) {
 	return x, f.F(x)
 }
 
-func (f *Func) Len() int { return f.N }
+func (f *Func) Len() int      { return f.N }
+func (f *Func) Label() string { return f.Name }
