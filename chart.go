@@ -18,6 +18,9 @@ func NewChart(ctx js.Value, config *Config) Chart {
 	if chart.IsUndefined() {
 		panic("Chart not defined. Did you add the script to DOM?")
 	}
+	if config.Type == "" {
+		panic("config must have defined type field")
+	}
 	return Chart{
 		Value: chart.Get("Chart").New(ctx, objectify(config)),
 	}

@@ -69,4 +69,26 @@ func LabelXYer(label string, xyer XYer) LabelledXYer {
 type Options struct {
 	Animation bool     `js:"animation"`
 	Scales    js.Value `js:"scales"`
+	Plugins   js.Value `js:"plugins"`
 }
+
+func (o *Options) AddPlugins(plugins ...Plugin) {
+	if !o.Plugins.Truthy() {
+		o.Plugins = js.Global().Get("Object").New()
+	}
+	for _, plugin := range plugins {
+		o.Plugins.Set(plugin.plugin(), objectify(plugin))
+	}
+}
+
+type Plugin interface {
+	plugin() string
+}
+
+type PluginTitle struct {
+	Text    string `js:"text"`
+	Display bool   `js:"display"`
+	Align   string `js:"align"`
+}
+
+func (PluginTitle) plugin() string { return "title" }
